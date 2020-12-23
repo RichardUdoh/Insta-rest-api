@@ -46,7 +46,7 @@ class Comment(BaseModel):
 
 class Post(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     photo = models.ImageField(blank=True, null=True)
 
     caption = models.TextField()
