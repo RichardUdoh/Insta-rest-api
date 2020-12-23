@@ -2,8 +2,6 @@ import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser, AnonymousUser
 from typing import Union
-from imagekit.models import ProcessedImageField
-from imagekit.processors import ResizeToFit
 
 # Create your models here.
 
@@ -49,16 +47,11 @@ class Comment(BaseModel):
 class Post(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    photo = ProcessedImageField(
-        upload_to="photos",
-        format="JPEG",
-        options={"quality": 90},
-        processors=[ResizeToFit(width=1200, height=1200)],
-    )
+    photo = models.ImageField(blank=True, null=True)
 
     caption = models.TextField()
-    comments = models.ForeignKey(Comment, editable=True, on_delete=models.CASCADE)
-    likes = models.ForeignKey(Like, on_delete=models.CASCADE)
+    comments = models.ForeignKey(Comment, editable=True, blank=True, null=True, on_delete=models.CASCADE )
+    likes = models.ForeignKey(Like, blank=True, null=True, on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
