@@ -18,13 +18,22 @@
                 <img src="{{ post.photo.url }}"alt="">
             </div>
             <div class="engagement">
-                <a href=""><i class="far fa-heart"></i></a>
+                <!-- <a href=""><i class="far fa-heart"></i></a> -->
+                <form action="{% url 'api:like-post'%}" method='POST' class="ui form" style="display: inline-block;margin: 0;margin-block-end: 0;">
+                    {% csrf_token %}
+                    <input type='hidden' name='post_id' value="{{ post.id }}">
+                    <button type="submit" style="outline: none;background: none;border: 0;width: 40px;height: 40px;padding: 0;display: inline-block;
+                "><i class="far fa-heart" style="transform: scale(2);"></i></button>
+
+                </form>
+
+                
                 <a href=""><i class="far fa-comment"></i></a>
                 <a href=""><i class="far fa-share-square"></i></a>
                 <a href=""><i class="far fa-bookmark"></i></a>
             </div>
             <div class="likes">
-                <a href="">345</a>
+                <strong>{{ post.liked.all.count }}</strong>
             </div>
             <div class="caption">
                 <a href=""><h2> {{ post.author }}</h2></a>

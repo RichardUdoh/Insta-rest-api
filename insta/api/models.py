@@ -25,13 +25,6 @@ class User(BaseModel, AbstractUser):
 RequestUser = Union[AnonymousUser, User]       
 
 
-class Like(BaseModel):
-    likes=models.ManyToManyField(User,blank=True, related_name='likes')
-     
-    @property
-    def total_likes(self):
-        return self.likes
-
 
 class Comment(BaseModel):
     content = models.TextField(max_length=2000)
@@ -46,12 +39,14 @@ class Comment(BaseModel):
 
 class Post(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author')
     photo = models.ImageField(blank=True, null=True)
 
     caption = models.TextField()
     comments = models.ForeignKey(Comment, editable=True, blank=True, null=True, on_delete=models.CASCADE )
-    likes = models.ForeignKey(Like, blank=True, null=True, on_delete=models.CASCADE)
+    #likes = models.ForeignKey(Like, blank=True, null=True, on_delete=models.CASCADE)
+    liked = models.ManyToManyField(User, default=None, blank=True, related_name='liked')
+
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
@@ -62,9 +57,31 @@ class Post(BaseModel):
     def get_image_url(self, obj):
         return obj.image.url
 
+    @property
+    def num_likes(self):
+        return self.liked.all().count()
+
     class Meta:
         ordering = ["-created_at"]
 
 
 
+LIKE_CHOICES = (
+    ('Like', 'Like'),
+    ('Unlike', 'Unlike'),
+)
+
+class Like(BaseModel):
+    #likes=models.ManyToManyField(User,blank=True, related_name='likes')
+     
+    # @property
+    # def total_likes(self):
+    #     return self.likes
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
+    value = models.CharField(choices=LIKE_CHOICES, default='Like', max_length=10)
+
+    def __str__(self):
+        return str(self.post)
 
