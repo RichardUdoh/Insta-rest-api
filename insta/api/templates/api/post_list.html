@@ -28,7 +28,11 @@
                 </form>
 
                 
-                <a href=""><i class="far fa-comment"></i></a>
+                <!-- <a href=""><i class="far fa-comment"></i></a> -->
+                <button style="outline: none;background: none;border: 0;width: 40px;height: 40px;padding: 0;display: inline-block;
+                "><i class="far fa-comment" style="transform: scale(2);"></i></button>
+
+
                 <a href=""><i class="far fa-share-square"></i></a>
                 <a href=""><i class="far fa-bookmark"></i></a>
             </div>
@@ -42,8 +46,29 @@
             <div class="time_period">
                 {{post.created_at | timesince }} ago
             </div>
+
+            <div class="comment_box">
+                <textarea placeholder="Add a comment"></textarea>
+            </div>
+
         </div>
 
     {% endfor %}
+    <div class="pagination">
+        {% if is_paginated %}
+  <nav aria-label="Page navigation conatiner"></nav>
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+    <li><a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo; PREV </a></li>
+    {% endif %}
+    {% if page_obj.has_next %}
+    <li><a href="?page={{ page_obj.next_page_number }}"> NEXT &raquo;</a></li>
+
+    {% endif %}
+  </ul>
+  </nav>
+</div>
+{% endif %}
+    </div>
 
 {% endblock %}    

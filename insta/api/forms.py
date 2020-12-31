@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post
+from .models import Post, Comment
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Field
 
@@ -14,3 +14,12 @@ class PostForm(forms.ModelForm):
             'photo',
             'caption'
         ]
+
+class CommentForm(forms.ModelForm):
+    content = forms.CharField(widget=forms.Textarea(attrs={'class': 'textarea'}), required=True)
+
+    class Meta:
+        model = Comment
+        fields = [
+            'content',
+        ]   

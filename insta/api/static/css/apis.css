@@ -163,7 +163,8 @@ header{
     float: right;
     margin-right: 25px;
 }
-.likes a{
+
+.likes strong {
     text-decoration: none;
     font-size: 15px;
     font-weight: 500;
@@ -205,4 +206,30 @@ header{
     color: #111;
     padding: 0px 16px;
     text-transform: uppercase;
+}
+
+.comment_box {
+    display: block;
+    width: 100%;
+}
+
+textarea {
+    width: 100%;
+    border: none;
+    color: gray;
+    padding: 24px;
+    margin: 0px;
+    height: 40px;
+}
+
+.pagination {
+    text-align: center;
+    display: inline-block;
+}
+
+.pagination li{
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
 }

@@ -25,25 +25,13 @@ class User(BaseModel, AbstractUser):
 RequestUser = Union[AnonymousUser, User]       
 
 
-
-class Comment(BaseModel):
-    content = models.TextField(max_length=2000)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.content
-
-    class Meta:
-        ordering = ["-created_at"]
-
-
 class Post(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author')
     photo = models.ImageField(blank=True, null=True)
 
     caption = models.TextField()
-    comments = models.ForeignKey(Comment, editable=True, blank=True, null=True, on_delete=models.CASCADE )
+    #comments = models.ForeignKey(Comment, editable=True, blank=True, null=True, on_delete=models.CASCADE )
     #likes = models.ForeignKey(Like, blank=True, null=True, on_delete=models.CASCADE)
     liked = models.ManyToManyField(User, default=None, blank=True, related_name='liked')
 
@@ -85,3 +73,15 @@ class Like(BaseModel):
     def __str__(self):
         return str(self.post)
 
+
+class Comment(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    post = models.ForeignKey(Post,related_name="comments", on_delete=models.CASCADE, null=True)
+    content = models.TextField(max_length=2000)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.content
+
+    class Meta:
+        ordering = ["-created_at"]
