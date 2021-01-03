@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect , get_object_or_404, HttpResponseR
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.contrib import messages
 from . serializers import LikeSerializer, CommentSerializer, PostSerializer
 from .models import Post, Like, Comment
 from .forms import PostForm, CommentForm
@@ -28,16 +29,6 @@ class PostCreateView(CreateView):
         form.instance.author = self.request.user 
         return super().form_valid(form)
 
-# class PostCommentView(CommentView):
-#     template_name = "api/post_list.html"
-#     form_class = CommentForm
-#     queryset = Post.objects.all()
-#     success_url = '/'
-
-#     def form_valid(self, form):
-#         print(form.cleaned_data)
-#         form.instance.user = self.request.user 
-#         return super().form_valid(form)
 
 def like_post(request):
     # print('This method works HURRAY!!!!')
@@ -62,38 +53,22 @@ def like_post(request):
         like.save()
     return redirect('api:post_list')
     
-# def comment_post(request):
-#     user = request.user
-#     post = 
-#     if request.method == 'POST':
-#         form = CommentForm(request.POST)
-#         if form.is_valid():
-#             comment = form.save(commit=False)
-#             comment.post = post 
-#             comment.user = user
-#             comment.save()
-#             return redirect('api:post_list')
+def comment_form(request):
+    comments = Comment.objects.filter(user=request.user)
+    form = CommentForm()
+    if request.method =='POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.save()
+            
+            messages.success(request,('Your new comment has been added'))
+        return redirect('/')
 
-
-# def comment_post(request, post):
-
-#     post = get_object_or_404(Post, slug=post)
-
-#     comments = post.comments.filter(status=True)
-
-#     user_comment = None
-
-#     if request.method == 'POST':
-#         comment_form = CommentForm(request.POST)
-#         if comment_form.is_valid():
-#             user_comment = comment_form.save(commit=False)
-#             user_comment.post = post
-#             user_comment.save()
-#             return HttpResponseRedirect('/' + post.slug)
-#     else:
-#         comment_form = CommentForm()
-#     return render(request, 'single.html', {'post': post, 'comments':  user_comment, 'comments': comments, 'comment_form': comment_form})
-
+    content = {'Comments':comments, 'form':form}
+    return render(request, 'api/post_list.html', content)
+    
 
 class Likelist(APIView):
     def get(self, request):
@@ -121,3 +96,4 @@ class Postlist(APIView):
 
     def post(self):
         pass
+

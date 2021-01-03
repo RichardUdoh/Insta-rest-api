@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from django.contrib.auth.models import AbstractUser, AnonymousUser
+from django.contrib.auth.models import AbstractUser, AnonymousUser, User
 from typing import Union
 
 # Create your models here.
