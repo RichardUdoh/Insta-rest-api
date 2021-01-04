@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect , get_object_or_404, HttpResponseRedirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics
 from django.contrib import messages
 from . serializers import LikeSerializer, CommentSerializer, PostSerializer
 from .models import Post, Like, Comment
@@ -85,8 +85,8 @@ class Commentlist(APIView):
         serializer = LikeSerializer(comment1, many=True)
         return Response(serializer.data)
 
-    def post(self):
-        pass
+    def post(self, request):
+        comment = request.data()
 
 class Postlist(APIView):
     def get(self, request):
@@ -97,3 +97,11 @@ class Postlist(APIView):
     def post(self):
         pass
 
+class CommentApi(APIView):
+    serializer_class = CommentSerializer
+    def post(self , request, id_post, *args, **kwargs):
+        post = Post.objects.get(id=self.kwargs['id_post'])
+        comment = request.data["comment"]
+        post.comment.add(comment)
+        post.save()
+        return Response({"response" : "comment"})

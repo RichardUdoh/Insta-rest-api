@@ -24,7 +24,8 @@ from api import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^liked/', views.Likelist.as_view()),
-    url(r'^commented/', views.Commentlist.as_view()),
+    url(r'^commented/', views.CommentApi.as_view()),
+    url(r'^commented/<int:id_post>/', views.CommentApi.as_view()),
     url(r'^posted/', views.Postlist.as_view()),
     path('', include('api.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
